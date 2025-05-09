@@ -19,7 +19,7 @@ import (
 const port = 5001
 
 func main() {
-	total := 2
+	total := 200
 	success := atomic.Int32{}
 	fail := atomic.Int32{}
 	mu := sync.Mutex{}
