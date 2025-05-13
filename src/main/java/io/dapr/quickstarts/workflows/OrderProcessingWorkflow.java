@@ -1,5 +1,6 @@
 package io.dapr.quickstarts.workflows;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import io.dapr.workflows.Workflow;
 import io.dapr.workflows.WorkflowStub;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import io.dapr.quickstarts.workflows.models.*;
 import io.dapr.quickstarts.workflows.activities.*;
 
-@Service
+@Component
 public class OrderProcessingWorkflow implements Workflow {
 
   private static final Logger logger = LoggerFactory.getLogger(OrderProcessingWorkflow.class);
