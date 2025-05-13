@@ -17,16 +17,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.dapr.quickstarts.workflows.models.*;
+import io.dapr.spring.workflows.config.EnableDaprWorkflows;
 
 @SpringBootApplication
 @RestController
+@EnableDaprWorkflows
 public class WorkflowApp {
 
   @Autowired
-  private WorkflowRuntime workflowRuntime;
+  private DaprWorkflowClient daprWorkflowClient;
 
   private static final Logger logger = LoggerFactory.getLogger(WorkflowApp.class);
-  private DaprWorkflowClient workflowClient = new DaprWorkflowClient();
 
   public static void main(String[] args) {
     SpringApplication.run(WorkflowApp.class, args);
@@ -37,14 +38,9 @@ public class WorkflowApp {
     logger.info("Received request to start workflow for item: {} with quantity: {}", order.getItemName(),
         order.getQuantity());
 
-    if (workflowRuntime == null) {
-      logger.error("Workflow runtime is not initialized");
-      throw new IllegalStateException("Workflow runtime is not initialized");
-    }
-
     // Run the workflow
     try {
-      String instanceId = workflowClient.scheduleNewWorkflow(OrderProcessingWorkflow.class, order);
+      String instanceId = daprWorkflowClient.scheduleNewWorkflow(OrderProcessingWorkflow.class, order);
       logger.info("Workflow execution started successfully for item: {} {}", order.getQuantity(), order.getItemName());
       return ResponseEntity.ok(instanceId);
     } catch (Exception e) {
@@ -56,7 +52,7 @@ public class WorkflowApp {
   @GetMapping("/workflow/status/{workflowId}")
   public ResponseEntity<String> getWorkflowStatus(@PathVariable String workflowId) {
     try {
-      WorkflowInstanceStatus status = workflowClient.getInstanceState(workflowId, true);
+      WorkflowInstanceStatus status = daprWorkflowClient.getInstanceState(workflowId, true);
       if (status == null) {
         logger.error("Workflow not found for ID: {}", workflowId);
         return ResponseEntity.notFound().build();
@@ -75,7 +71,7 @@ public class WorkflowApp {
   @PostMapping("/workflow/terminate/{workflowId}")
   public ResponseEntity<String> terminateWorkflow(@PathVariable String workflowId) {
     try {
-      workflowClient.terminateWorkflow(workflowId, null);
+      daprWorkflowClient.terminateWorkflow(workflowId, null);
 
       logger.info("Workflow terminated successfully for ID: {}", workflowId);
       return ResponseEntity.ok("Workflow terminated successfully");

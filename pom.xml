@@ -6,8 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <!-- Use the last 2.x version that supports Java 11 -->
-    <version>2.7.4</version>
+    <version>3.4.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
 
@@ -38,12 +37,17 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Check for a compatible version of Dapr SDK that works with Java 11 -->
     <dependency>
-      <groupId>io.dapr</groupId>
-      <artifactId>dapr-sdk-workflows</artifactId>
-      <version>0.15.0-rc-1</version>
+        <groupId>io.dapr.spring</groupId>
+		<artifactId>dapr-spring-boot-starter</artifactId>
+        <version>0.15.0-rc-1</version>
+	</dependency>
+    <dependency>
+        <groupId>io.dapr.spring</groupId>
+        <artifactId>dapr-spring-workflows</artifactId>
+        <version>0.15.0-rc-1</version>
     </dependency>
+
   </dependencies>
 
   <build>
